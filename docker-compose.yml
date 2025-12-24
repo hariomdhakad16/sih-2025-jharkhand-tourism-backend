@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
     mongodb:
-        image: mongo:7
+        image: mongodb/mongodb-community-server
         container_name: jharkhand-tourism-mongodb
         restart: unless-stopped
         environment:
