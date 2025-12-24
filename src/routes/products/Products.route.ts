@@ -19,48 +19,60 @@ import {
 	updateProduct,
 	deleteProduct
 } from '../../controllers/products.controller';
+import { validate } from '../../middleware/validation.middleware';
+import {
+	createProductSchema,
+	updateProductSchema,
+	productQuerySchema,
+	idParamSchema
+} from '../../validation';
 
 const router = Router();
 
 /**
- * @route   GET /api/products
+ * @route   GET /api/v1/products
  * @desc    Get all products with optional filters
  * @query   page, limit, category
  * @access  Public
  */
-router.get('/', getAllProducts);
+router.get('/', validate(productQuerySchema, 'query'), getAllProducts);
 
 /**
- * @route   GET /api/products/:id
+ * @route   GET /api/v1/products/:id
  * @desc    Get a single product by ID
  * @param   id - Product ID
  * @access  Public
  */
-router.get('/:id', getProductById);
+router.get('/:id', validate(idParamSchema, 'params'), getProductById);
 
 /**
- * @route   POST /api/products
+ * @route   POST /api/v1/products
  * @desc    Create a new product listing
  * @body    CreateProductInput
- * @access  Public (would be protected in production)
+ * @access  Public (will be protected after auth implementation)
  */
-router.post('/', createProduct);
+router.post('/', validate(createProductSchema), createProduct);
 
 /**
- * @route   PUT /api/products/:id
+ * @route   PUT /api/v1/products/:id
  * @desc    Update an existing product
  * @param   id - Product ID
  * @body    UpdateProductInput (partial)
- * @access  Public (would be protected in production)
+ * @access  Public (will be protected after auth implementation)
  */
-router.put('/:id', updateProduct);
+router.put(
+	'/:id',
+	validate(idParamSchema, 'params'),
+	validate(updateProductSchema),
+	updateProduct
+);
 
 /**
- * @route   DELETE /api/products/:id
+ * @route   DELETE /api/v1/products/:id
  * @desc    Delete a product listing
  * @param   id - Product ID
- * @access  Public (would be protected in production)
+ * @access  Public (will be protected after auth implementation)
  */
-router.delete('/:id', deleteProduct);
+router.delete('/:id', validate(idParamSchema, 'params'), deleteProduct);
 
 export default router;

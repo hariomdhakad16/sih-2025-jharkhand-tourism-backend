@@ -17,40 +17,52 @@ import {
 	createBooking,
 	cancelBooking
 } from '../../controllers/bookings.controller';
+import { validate } from '../../middleware/validation.middleware';
+import {
+	createBookingSchema,
+	cancelBookingSchema,
+	bookingQuerySchema,
+	idParamSchema
+} from '../../validation';
 
 const router = Router();
 
 /**
- * @route   GET /api/bookings
+ * @route   GET /api/v1/bookings
  * @desc    Get all bookings with optional filters
  * @query   page, limit, status
- * @access  Public (would be protected in production)
+ * @access  Public (will be protected after auth implementation)
  */
-router.get('/', getAllBookings);
+router.get('/', validate(bookingQuerySchema, 'query'), getAllBookings);
 
 /**
- * @route   GET /api/bookings/:id
+ * @route   GET /api/v1/bookings/:id
  * @desc    Get a single booking by ID
  * @param   id - Booking ID
- * @access  Public (would be protected in production)
+ * @access  Public (will be protected after auth implementation)
  */
-router.get('/:id', getBookingById);
+router.get('/:id', validate(idParamSchema, 'params'), getBookingById);
 
 /**
- * @route   POST /api/bookings
+ * @route   POST /api/v1/bookings
  * @desc    Create a new booking
  * @body    CreateBookingInput
  * @access  Public
  */
-router.post('/', createBooking);
+router.post('/', validate(createBookingSchema), createBooking);
 
 /**
- * @route   PUT /api/bookings/:id/cancel
+ * @route   PUT /api/v1/bookings/:id/cancel
  * @desc    Cancel an existing booking
  * @param   id - Booking ID
  * @body    CancelBookingInput (optional reason)
- * @access  Public (would be protected in production)
+ * @access  Public (will be protected after auth implementation)
  */
-router.put('/:id/cancel', cancelBooking);
+router.put(
+	'/:id/cancel',
+	validate(idParamSchema, 'params'),
+	validate(cancelBookingSchema),
+	cancelBooking
+);
 
 export default router;

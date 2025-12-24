@@ -19,48 +19,60 @@ import {
 	updateHomestay,
 	deleteHomestay
 } from '../../controllers/homestays.controller';
+import { validate } from '../../middleware/validation.middleware';
+import {
+	createHomestaySchema,
+	updateHomestaySchema,
+	homestayQuerySchema,
+	idParamSchema
+} from '../../validation';
 
 const router = Router();
 
 /**
- * @route   GET /api/homestays
+ * @route   GET /api/v1/homestays
  * @desc    Get all homestays with optional filters
  * @query   page, limit, district, minPrice, maxPrice
  * @access  Public
  */
-router.get('/', getAllHomestays);
+router.get('/', validate(homestayQuerySchema, 'query'), getAllHomestays);
 
 /**
- * @route   GET /api/homestays/:id
+ * @route   GET /api/v1/homestays/:id
  * @desc    Get a single homestay by ID
  * @param   id - Homestay ID
  * @access  Public
  */
-router.get('/:id', getHomestayById);
+router.get('/:id', validate(idParamSchema, 'params'), getHomestayById);
 
 /**
- * @route   POST /api/homestays
+ * @route   POST /api/v1/homestays
  * @desc    Create a new homestay listing
  * @body    CreateHomestayInput
- * @access  Public (would be protected in production)
+ * @access  Public (will be protected after auth implementation)
  */
-router.post('/', createHomestay);
+router.post('/', validate(createHomestaySchema), createHomestay);
 
 /**
- * @route   PUT /api/homestays/:id
+ * @route   PUT /api/v1/homestays/:id
  * @desc    Update an existing homestay
  * @param   id - Homestay ID
  * @body    UpdateHomestayInput (partial)
- * @access  Public (would be protected in production)
+ * @access  Public (will be protected after auth implementation)
  */
-router.put('/:id', updateHomestay);
+router.put(
+	'/:id',
+	validate(idParamSchema, 'params'),
+	validate(updateHomestaySchema),
+	updateHomestay
+);
 
 /**
- * @route   DELETE /api/homestays/:id
+ * @route   DELETE /api/v1/homestays/:id
  * @desc    Delete a homestay listing
  * @param   id - Homestay ID
- * @access  Public (would be protected in production)
+ * @access  Public (will be protected after auth implementation)
  */
-router.delete('/:id', deleteHomestay);
+router.delete('/:id', validate(idParamSchema, 'params'), deleteHomestay);
 
 export default router;
