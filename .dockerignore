@@ -1,0 +1,54 @@
+# =============================================================================
+# Docker Ignore File
+# =============================================================================
+# Files and directories to exclude from Docker build context
+# =============================================================================
+
+# Dependencies (will be installed in container)
+node_modules
+
+# Build output (will be built in container)
+dist
+
+# Environment files (secrets should not be in image)
+.env
+.env.local
+.env.*.local
+
+# Git
+.git
+.gitignore
+
+# Documentation
+*.md
+README*
+CHANGELOG*
+LICENSE
+
+# IDE and editor files
+.idea
+.vscode
+*.swp
+*.swo
+*~
+
+# CodeTour files
+.tours
+
+# Test files
+tests
+*.test.ts
+*.spec.ts
+coverage
+.nyc_output
+
+# Docker files (not needed inside container)
+Dockerfile
+docker-compose*.yml
+.dockerignore
+
+# Misc
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*
